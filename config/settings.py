@@ -125,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CORS_ALLOWED_ORIGINS = config(
     "CORS_ALLOWED_ORIGINS",
-    default="http://localhost:3000,https://apex-solution.vercel.app/",
+    default="http://localhost:3000,https://apex-solution.vercel.app",
     cast=Csv(),
 )
 
