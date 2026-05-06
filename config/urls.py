@@ -29,5 +29,6 @@ urlpatterns = [
     path('api/partners/', include('partners.urls')),
     path('api/contacts/', include('contacts.urls')),
     path('api/testimonials/', include('testimonials.urls')),
+    path('api/newsletter/', include('newsletters.urls')),
     path('api/dashboard/', views.dashboard_data, name='dashboard'),
 ]

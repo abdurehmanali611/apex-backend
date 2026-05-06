@@ -72,6 +72,42 @@ CREATE DATABASE apex_portfolio CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 Then copy `.env.example` to `.env` and wire it in `settings.py`.
 
+### Migrations on Windows (when `python` fails)
+
+If you see **“No Python at python.exe”** or **`python` is not recognized**, Windows does not know which interpreter to use. From the `BackEnd` folder, try one of these:
+
+1. **Project virtual environment** (recommended — repo includes `venv/` if you created it):
+
+   ```powershell
+   .\venv\Scripts\python.exe manage.py migrate
+   ```
+
+2. **Python launcher** (after installing Python from [python.org](https://www.python.org/downloads/)):
+
+   ```powershell
+   py -3 manage.py migrate
+   ```
+
+3. **Batch helper** (same folder as `manage.py`):
+
+   ```powershell
+   .\migrate.bat
+   ```
+
+If `venv` does not exist yet:
+
+```powershell
+py -3 -m venv venv
+.\venv\Scripts\pip install -r requirements.txt
+.\venv\Scripts\python.exe manage.py migrate
+```
+
+If activation or migrate prints **`No Python at 'C:\...\python.exe'`**, delete the broken `venv` folder and recreate it with `py -3 -m venv venv` (your old environment remembers a Python install that no longer exists).
+
+### SMTP (newsletter email from Builder)
+
+Newsletters posted in Builder send mail over SMTP when `NEWSLETTER_SEND_EMAILS=True` and `EMAIL_HOST` is set. Copy variables from `.env.example` into `.env` (host, port, user, password, `DEFAULT_FROM_EMAIL`). For local testing without sending, set `NEWSLETTER_SEND_EMAILS=False`.
+
 Example database config:
 
 ```python

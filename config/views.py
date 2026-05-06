@@ -11,6 +11,7 @@ from teams.models import Team
 from partners.models import Partner
 from contacts.models import Contact
 from testimonials.models import Testimonial
+from newsletters.models import NewsletterSubscriber, NewsletterIssue
 from django.utils import timezone
 from datetime import timedelta
 
@@ -25,6 +26,8 @@ def dashboard_data(request):
     partners_count = Partner.objects.count()
     contacts_count = Contact.objects.count()
     testimonials_count = Testimonial.objects.count()
+    newsletter_subscribers_count = NewsletterSubscriber.objects.count()
+    newsletter_issues_count = NewsletterIssue.objects.count()
 
     # Recent activities (last 7 days)
     week_ago = timezone.now() - timedelta(days=7)
@@ -41,6 +44,8 @@ def dashboard_data(request):
             'partners': partners_count,
             'contacts': contacts_count,
             'testimonials': testimonials_count,
+            'newsletter_subscribers': newsletter_subscribers_count,
+            'newsletter_issues': newsletter_issues_count,
         },
         'recent_activities': {
             'contacts': [

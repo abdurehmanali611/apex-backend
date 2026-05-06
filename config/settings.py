@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "partners",
     "contacts",
     "testimonials",
+    "newsletters",
 ]
 
 
@@ -125,7 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CORS_ALLOWED_ORIGINS = config(
     "CORS_ALLOWED_ORIGINS",
-    default="http://localhost:3000,https://apex-solution.vercel.app",
+    default="http://localhost:3000,https://www.apexsolutionhub.com,https://apex-solution.vercel.app",
     cast=Csv(),
 )
 
@@ -140,6 +141,32 @@ REST_FRAMEWORK = {
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Email (SMTP) — used by newsletter sends from Builder
+EMAIL_BACKEND = config(
+    "EMAIL_BACKEND",
+    default="django.core.mail.backends.smtp.EmailBackend",
+)
+EMAIL_HOST = config("EMAIL_HOST", default="")
+EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False, cast=bool)
+DEFAULT_FROM_EMAIL = config(
+    "DEFAULT_FROM_EMAIL",
+    default="contact@apexsolutionhub.com",
+)
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+SITE_PUBLIC_URL = config(
+    "SITE_PUBLIC_URL",
+    default="https://www.apexsolutionhub.com",
+)
+NEWSLETTER_SEND_EMAILS = config(
+    "NEWSLETTER_SEND_EMAILS",
+    default=True,
+    cast=bool,
+)
 
 
 # Internationalization
