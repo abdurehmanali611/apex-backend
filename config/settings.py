@@ -23,8 +23,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
+def env_bool(name: str, default: bool = False) -> bool:
+    value = config(name, default=default)
+    if isinstance(value, bool):
+        return value
+
+    normalized = str(value).strip().lower()
+    if normalized in {"1", "true", "t", "yes", "y", "on", "debug", "dev", "development"}:
+        return True
+    if normalized in {"0", "false", "f", "no", "n", "off", "release", "prod", "production"}:
+        return False
+    return default
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = env_bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[], cast=Csv())
 
@@ -102,6 +115,12 @@ DATABASES = {
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST', default='localhost'),
         'PORT': config('DB_PORT', default="3306"),
+        'CONN_MAX_AGE': config('DB_CONN_MAX_AGE', default=60, cast=int),
+        'OPTIONS': {
+            'connect_timeout': config('DB_CONNECT_TIMEOUT', default=10, cast=int),
+            'read_timeout': config('DB_READ_TIMEOUT', default=30, cast=int),
+            'write_timeout': config('DB_WRITE_TIMEOUT', default=30, cast=int),
+        },
     }
 }
 
@@ -151,8 +170,8 @@ EMAIL_HOST = config("EMAIL_HOST", default="")
 EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
-EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False, cast=bool)
+EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", default=True)
+EMAIL_USE_SSL = env_bool("EMAIL_USE_SSL", default=False)
 DEFAULT_FROM_EMAIL = config(
     "DEFAULT_FROM_EMAIL",
     default="contact@apexsolutionhub.com",
@@ -162,11 +181,7 @@ SITE_PUBLIC_URL = config(
     "SITE_PUBLIC_URL",
     default="https://www.apexsolutionhub.com",
 )
-NEWSLETTER_SEND_EMAILS = config(
-    "NEWSLETTER_SEND_EMAILS",
-    default=True,
-    cast=bool,
-)
+NEWSLETTER_SEND_EMAILS = env_bool("NEWSLETTER_SEND_EMAILS", default=True)
 
 
 # Internationalization
