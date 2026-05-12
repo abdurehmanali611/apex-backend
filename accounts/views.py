@@ -7,6 +7,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenRefreshView
 
 logger = logging.getLogger(__name__)
 
@@ -71,5 +72,10 @@ def change_password(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def token_refresh_view(request):
-    from rest_framework_simplejwt.views import TokenRefreshView
-    return TokenRefreshView.as_view()(request)
+    serializer = TokenRefreshView.serializer_class(data=request.data)
+    try:
+        serializer.is_valid(raise_exception=True)
+    except Exception as exc:
+        logger.exception("Token refresh failed")
+        raise exc
+    return Response(serializer.validated_data, status=status.HTTP_200_OK)
